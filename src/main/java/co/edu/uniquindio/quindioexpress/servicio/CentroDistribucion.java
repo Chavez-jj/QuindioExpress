@@ -1,5 +1,6 @@
 package co.edu.uniquindio.quindioexpress.servicio;
 
+import co.edu.uniquindio.quindioexpress.comparadores.ComparadorDespacho;
 import co.edu.uniquindio.quindioexpress.modelo.Paquete;
 import co.edu.uniquindio.quindioexpress.modelo.Repartidor;
 import co.edu.uniquindio.quindioexpress.estructuras.ListaEnlazadaSimple;
@@ -7,19 +8,72 @@ import co.edu.uniquindio.quindioexpress.estructuras.ListaEnlazadaSimple;
 import java.util.*;
 
 /**
- * Esqueleto de servicio del Centro de Distribución.
- * Define los contratos para que I2 e I3 puedan trabajar en paralelo.
+ * Centro de Distribución de QuindíoExpress.
+ * Cada colección resuelve una necesidad distinta del enunciado.
  */
 public class CentroDistribucion {
 
     private String nombre;
 
+    // Búsqueda por código en O(1) y control de códigos repetidos
+    private final Map<String, Paquete> paquetesPorCodigo;
+    // Registro de todos los paquetes en orden de llegada
+    private final List<Paquete> paquetesEnOrden;
+    // Atención por orden de llegada (FIFO)
+    private final Queue<Paquete> colaLlegada;
+    // Despacho por prioridad, luego tiempo, luego código
+    private final PriorityQueue<Paquete> colaPrioridad;
+    // Municipios sin repetidos y municipios ordenados alfabéticamente
+    private final Set<String> municipios;
+    private final Set<String> municipiosOrdenados;
+    // Municipio -> paquetes de ese municipio
+    private final Map<String, ListaEnlazadaSimple<Paquete>> paquetesPorMunicipio;
+
     public CentroDistribucion(String nombre) {
         this.nombre = nombre;
+        this.paquetesPorCodigo = new HashMap<>();
+        this.paquetesEnOrden = new ArrayList<>();
+        this.colaLlegada = new ArrayDeque<>();
+        this.colaPrioridad = new PriorityQueue<>(new ComparadorDespacho());
+        this.municipios = new HashSet<>();
+        this.municipiosOrdenados = new TreeSet<>();
+        this.paquetesPorMunicipio = new HashMap<>();
     }
 
+    /**
+     * Registra un paquete en todas las colecciones.
+     * Rechaza el paquete si ya existe otro con el mismo código.
+     */
     public void recibirPaquete(Paquete paquete) {
-        throw new UnsupportedOperationException("Esqueleto I2: Pendiente por implementar.");
+        if (paquete == null) {
+            throw new IllegalArgumentException("El paquete no puede ser nulo.");
+        }
+        if (paquetesPorCodigo.containsKey(paquete.getCodigo())) {
+            throw new IllegalArgumentException("Ya existe un paquete con el código " + paquete.getCodigo());
+        }
+
+        paquetesPorCodigo.put(paquete.getCodigo(), paquete);
+        paquetesEnOrden.add(paquete);
+        colaLlegada.add(paquete);
+        colaPrioridad.add(paquete);
+
+        String municipio = paquete.getDestino();
+        municipios.add(municipio);
+        municipiosOrdenados.add(municipio);
+
+        // Si el municipio aún no tiene lista, se crea; luego se agrega el paquete
+        if (!paquetesPorMunicipio.containsKey(municipio)) {
+            paquetesPorMunicipio.put(municipio, new ListaEnlazadaSimple<>());
+        }
+        paquetesPorMunicipio.get(municipio).agregar(paquete);
+    }
+
+    /**
+     * Busca un paquete por su código sin recorrer todos los paquetes (O(1) promedio).
+     * Retorna null si no existe.
+     */
+    public Paquete buscarPaquete(String codigo) {
+        return paquetesPorCodigo.get(codigo);
     }
 
     public Paquete procesarSiguientePaquete() {
@@ -36,5 +90,9 @@ public class CentroDistribucion {
 
     public Set<String> obtenerDestinosUnicos() {
         throw new UnsupportedOperationException("Esqueleto I2: Pendiente por implementar.");
+    }
+
+    public int cantidadPaquetes() {
+        return paquetesEnOrden.size();
     }
 }
