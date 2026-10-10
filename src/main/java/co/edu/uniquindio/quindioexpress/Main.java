@@ -43,6 +43,11 @@ public class Main {
             System.out.println(p);
         }
 
+        System.out.println("\n--- Pruebas de Métodos Recursivos ---");
+        System.out.println("Tamaño recursivo: " + lista.tamanioRecursivo());
+        System.out.println("¿Contiene PQ002? (recursivo): " + lista.contieneRecursivo(p2));
+        System.out.println("Obtener posición 0 (recursivo): " + lista.obtenerRecursivo(0));
+
         System.out.println("\n=== ¡TODAS LAS PRUEBAS PASARON CORRECTAMENTE! ===");
     }
 }

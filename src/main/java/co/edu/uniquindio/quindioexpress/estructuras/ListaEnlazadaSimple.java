@@ -132,4 +132,63 @@ public class ListaEnlazadaSimple<T> implements Coleccion<T> {
             return dato;
         }
     }
+
+    // =========================================================================
+    // MÉTODOS RECURSIVOS (Requisito de la asignatura / Integrante 3)
+    // Patrón: Método público wrapper -> Método privado auxiliar con Nodo<T>
+    // =========================================================================
+
+    /**
+     * Calcula el tamaño de la lista de forma recursiva (O(n) en tiempo y pila).
+     */
+    public int tamanioRecursivo() {
+        return tamanioRecursivoAux(primerNodo);
+    }
+
+    private int tamanioRecursivoAux(Nodo<T> nodo) {
+        // Caso base: lista vacía o fin de la lista
+        if (nodo == null) {
+            return 0;
+        }
+        // Paso recursivo: 1 + el tamaño del resto de la lista
+        return 1 + tamanioRecursivoAux(nodo.getSiguiente());
+    }
+
+    /**
+     * Busca un elemento en la lista de forma recursiva.
+     */
+    public boolean contieneRecursivo(T elemento) {
+        if (elemento == null) return false;
+        return contieneRecursivoAux(primerNodo, elemento);
+    }
+
+    private boolean contieneRecursivoAux(Nodo<T> nodo, T elemento) {
+        // Caso base 1: no se encontró el elemento
+        if (nodo == null) {
+            return false;
+        }
+        // Caso base 2: elemento encontrado
+        if (nodo.getDato().equals(elemento)) {
+            return true;
+        }
+        // Paso recursivo: buscar en el siguiente nodo
+        return contieneRecursivoAux(nodo.getSiguiente(), elemento);
+    }
+
+    /**
+     * Obtiene un elemento por su índice de forma recursiva.
+     */
+    public T obtenerRecursivo(int posicion) {
+        if (posicion < 0 || posicion >= tamanio) {
+            throw new IndexOutOfBoundsException("Índice fuera de rango: " + posicion);
+        }
+        return obtenerRecursivoAux(primerNodo, posicion, 0);
+    }
+
+    private T obtenerRecursivoAux(Nodo<T> nodo, int posicionDeseada, int indiceActual) {
+        if (indiceActual == posicionDeseada) {
+            return nodo.getDato();
+        }
+        return obtenerRecursivoAux(nodo.getSiguiente(), posicionDeseada, indiceActual + 1);
+    }
 }
