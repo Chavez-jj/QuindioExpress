@@ -39,5 +39,20 @@ public class PruebaCentro {
         for (String municipio : centro.agruparPaquetesPorDestino().keySet()) {
             System.out.println("  " + municipio + " -> " + centro.obtenerPaquetesPorDestino(municipio).tamanio() + " paquete(s)");
         }
+
+        // --- Paso 3: atención por llegada y por prioridad ---
+        System.out.println("\nPendientes: " + centro.cantidadPendientes()); // 5
+        System.out.println("Atender por llegada: " + centro.procesarSiguientePaquete().getCodigo()); // PQ731
+
+        System.out.println("Despacho por prioridad:");
+        Paquete siguiente = centro.despacharSiguientePrioritario();
+        while (siguiente != null) {
+            System.out.println("  " + siguiente.getCodigo() + " (prioridad " + siguiente.getPrioridad()
+                    + ", " + siguiente.getTiempoEstimado() + " min)");
+            siguiente = centro.despacharSiguientePrioritario();
+        }
+        // Esperado: PQ105, PQ942, PQ420, PQ318 (PQ731 ya se atendió)
+        System.out.println("Pendientes: " + centro.cantidadPendientes()); // 0
+        System.out.println("Siguiente por llegada: " + centro.procesarSiguientePaquete()); // null
     }
 }

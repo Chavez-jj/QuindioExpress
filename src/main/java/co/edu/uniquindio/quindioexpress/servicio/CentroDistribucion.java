@@ -76,8 +76,35 @@ public class CentroDistribucion {
         return paquetesPorCodigo.get(codigo);
     }
 
+    /**
+     * Atiende el siguiente paquete por orden de llegada (FIFO).
+     * poll() saca el primero de la cola; retorna null si no hay pendientes.
+     * También se quita de la cola de prioridad para que no se despache dos veces.
+     */
     public Paquete procesarSiguientePaquete() {
-        throw new UnsupportedOperationException("Esqueleto I2: Pendiente por implementar.");
+        Paquete paquete = colaLlegada.poll();
+        if (paquete != null) {
+            colaPrioridad.remove(paquete);
+        }
+        return paquete;
+    }
+
+    /**
+     * Despacha el siguiente paquete según ComparadorDespacho:
+     * mayor prioridad, luego menor tiempo, luego código.
+     * Retorna null si no hay pendientes.
+     * También se quita de la cola de llegada para que no se atienda dos veces.
+     */
+    public Paquete despacharSiguientePrioritario() {
+        Paquete paquete = colaPrioridad.poll();
+        if (paquete != null) {
+            colaLlegada.remove(paquete);
+        }
+        return paquete;
+    }
+
+    public int cantidadPendientes() {
+        return colaLlegada.size();
     }
 
     public void registrarRepartidor(Repartidor repartidor) {
