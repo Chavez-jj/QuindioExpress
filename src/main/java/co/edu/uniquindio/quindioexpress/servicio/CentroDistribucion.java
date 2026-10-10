@@ -208,14 +208,18 @@ public class CentroDistribucion {
     /**
      * Retorna el historial de entregas en el orden en que ocurrieron.
      */
+    /**
+     * Retorna el historial de paquetes entregados.
+     * Aplica una copia defensiva para proteger el encapsulamiento de la estructura interna.
+     */
     public ListaEnlazadaSimple<Paquete> obtenerHistorial() {
-        return historialEntregas;
+        ListaEnlazadaSimple<Paquete> copia = new ListaEnlazadaSimple<>();
+        for (Paquete p : historialEntregas) {
+            copia.agregar(p);
+        }
+        return copia;
     }
 
-    /**
-     * Retorna el mapa municipio -> paquetes de ese municipio.
-     * Se llena en recibirPaquete, así que aquí solo se entrega.
-     */
     public Map<String, ListaEnlazadaSimple<Paquete>> agruparPaquetesPorDestino() {
         return paquetesPorMunicipio;
     }
