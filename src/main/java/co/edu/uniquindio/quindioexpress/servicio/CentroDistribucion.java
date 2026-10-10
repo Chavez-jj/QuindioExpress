@@ -28,6 +28,12 @@ public class CentroDistribucion {
     private final Set<String> municipiosOrdenados;
     // Municipio -> paquetes de ese municipio
     private final Map<String, ListaEnlazadaSimple<Paquete>> paquetesPorMunicipio;
+    // Repartidores por identificación: búsqueda O(1) y control de repetidos
+    private final Map<String, Repartidor> repartidores;
+    // Código del paquete -> repartidor al que se asignó
+    private final Map<String, Repartidor> asignaciones;
+    // Historial de entregas en el orden real en que se entregaron (lista propia)
+    private final ListaEnlazadaSimple<Paquete> historialEntregas;
 
     public CentroDistribucion(String nombre) {
         this.nombre = nombre;
@@ -38,6 +44,9 @@ public class CentroDistribucion {
         this.municipios = new HashSet<>();
         this.municipiosOrdenados = new TreeSet<>();
         this.paquetesPorMunicipio = new HashMap<>();
+        this.repartidores = new HashMap<>();
+        this.asignaciones = new HashMap<>();
+        this.historialEntregas = new ListaEnlazadaSimple<>();
     }
 
     /**
@@ -107,8 +116,99 @@ public class CentroDistribucion {
         return colaLlegada.size();
     }
 
+    /**
+     * Registra un repartidor. Rechaza identificaciones repetidas.
+     */
     public void registrarRepartidor(Repartidor repartidor) {
-        throw new UnsupportedOperationException("Esqueleto I2: Pendiente por implementar.");
+        if (repartidor == null) {
+            throw new IllegalArgumentException("El repartidor no puede ser nulo.");
+        }
+        if (repartidores.containsKey(repartidor.getIdentificacion())) {
+            throw new IllegalArgumentException("Ya existe un repartidor con la identificación " + repartidor.getIdentificacion());
+        }
+        repartidores.put(repartidor.getIdentificacion(), repartidor);
+    }
+
+    /**
+     * Busca un repartidor por identificación (O(1) promedio). Retorna null si no existe.
+     */
+    public Repartidor buscarRepartidor(String identificacion) {
+        return repartidores.get(identificacion);
+    }
+
+    /**
+     * Retorna una copia de los repartidores registrados.
+     */
+    public List<Repartidor> obtenerRepartidores() {
+        return new ArrayList<>(repartidores.values());
+    }
+
+    /**
+     * Asigna un paquete a un repartidor solo si:
+     * el paquete existe, no está entregado ni asignado, el repartidor existe,
+     * está disponible y su zona es el destino del paquete.
+     * Al asignarlo, el repartidor queda no disponible hasta que entregue.
+     */
+    public void asignarPaquete(String codigo, String identificacion) {
+        Paquete paquete = paquetesPorCodigo.get(codigo);
+        if (paquete == null) {
+            throw new IllegalArgumentException("No existe el paquete " + codigo);
+        }
+        if (historialEntregas.contieneRecursivo(paquete)) {
+            throw new IllegalArgumentException("El paquete " + codigo + " ya fue entregado.");
+        }
+        if (asignaciones.containsKey(codigo)) {
+            throw new IllegalArgumentException("El paquete " + codigo + " ya está asignado.");
+        }
+        Repartidor repartidor = repartidores.get(identificacion);
+        if (repartidor == null) {
+            throw new IllegalArgumentException("No existe el repartidor " + identificacion);
+        }
+        if (!repartidor.isDisponible()) {
+            throw new IllegalArgumentException("El repartidor " + repartidor.getNombre() + " no está disponible.");
+        }
+        if (!repartidor.getZona().equalsIgnoreCase(paquete.getDestino())) {
+            throw new IllegalArgumentException("La zona de " + repartidor.getNombre() + " (" + repartidor.getZona()
+                    + ") no coincide con el destino del paquete (" + paquete.getDestino() + ").");
+        }
+        asignaciones.put(codigo, repartidor);
+        repartidor.setDisponible(false);
+    }
+
+    /**
+     * Retorna el repartidor asignado a un paquete, o null si no tiene.
+     */
+    public Repartidor obtenerRepartidorAsignado(String codigo) {
+        return asignaciones.get(codigo);
+    }
+
+    /**
+     * Registra la entrega de un paquete: lo saca de las colas de pendientes (si sigue ahí)
+     * y lo agrega al final del historial. Si tenía repartidor, este queda disponible otra vez.
+     */
+    public void registrarEntrega(String codigo) {
+        Paquete paquete = paquetesPorCodigo.get(codigo);
+        if (paquete == null) {
+            throw new IllegalArgumentException("No existe el paquete " + codigo);
+        }
+        if (historialEntregas.contieneRecursivo(paquete)) {
+            throw new IllegalArgumentException("El paquete " + codigo + " ya fue entregado.");
+        }
+        colaLlegada.remove(paquete);
+        colaPrioridad.remove(paquete);
+        historialEntregas.agregar(paquete);
+
+        Repartidor repartidor = asignaciones.remove(codigo);
+        if (repartidor != null) {
+            repartidor.setDisponible(true);
+        }
+    }
+
+    /**
+     * Retorna el historial de entregas en el orden en que ocurrieron.
+     */
+    public ListaEnlazadaSimple<Paquete> obtenerHistorial() {
+        return historialEntregas;
     }
 
     /**
