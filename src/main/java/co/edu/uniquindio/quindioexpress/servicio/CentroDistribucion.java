@@ -84,12 +84,38 @@ public class CentroDistribucion {
         throw new UnsupportedOperationException("Esqueleto I2: Pendiente por implementar.");
     }
 
+    /**
+     * Retorna el mapa municipio -> paquetes de ese municipio.
+     * Se llena en recibirPaquete, así que aquí solo se entrega.
+     */
     public Map<String, ListaEnlazadaSimple<Paquete>> agruparPaquetesPorDestino() {
-        throw new UnsupportedOperationException("Esqueleto I2: Pendiente por implementar.");
+        return paquetesPorMunicipio;
     }
 
+    /**
+     * Retorna los paquetes de un municipio, o una lista vacía si no hay ninguno.
+     */
+    public ListaEnlazadaSimple<Paquete> obtenerPaquetesPorDestino(String municipio) {
+        ListaEnlazadaSimple<Paquete> lista = paquetesPorMunicipio.get(municipio);
+        if (lista == null) {
+            return new ListaEnlazadaSimple<>();
+        }
+        return lista;
+    }
+
+    /**
+     * Municipios con paquetes, sin repetidos (HashSet: sin orden).
+     * Se retorna una copia para que desde afuera no se pueda modificar el original.
+     */
     public Set<String> obtenerDestinosUnicos() {
-        throw new UnsupportedOperationException("Esqueleto I2: Pendiente por implementar.");
+        return new HashSet<>(municipios);
+    }
+
+    /**
+     * Municipios con paquetes, sin repetidos y en orden alfabético (TreeSet).
+     */
+    public Set<String> obtenerDestinosOrdenados() {
+        return new TreeSet<>(municipiosOrdenados);
     }
 
     public int cantidadPaquetes() {

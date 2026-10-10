@@ -21,5 +21,23 @@ public class PruebaCentro {
 
         System.out.println("Buscar PQ420: " + centro.buscarPaquete("PQ420"));
         System.out.println("Buscar PQ999: " + centro.buscarPaquete("PQ999")); // null
+
+        // --- Paso 2: municipios y agrupación ---
+        centro.recibirPaquete(new Paquete("PQ942", "Salento", 1.8, 4, 25));
+        centro.recibirPaquete(new Paquete("PQ318", "Calarcá", 6.0, 2, 50));
+
+        System.out.println("\nMunicipios sin repetidos: " + centro.obtenerDestinosUnicos());
+        System.out.println("Municipios ordenados: " + centro.obtenerDestinosOrdenados()); // [Armenia, Calarcá, Salento]
+
+        System.out.println("\nPaquetes de Armenia:");
+        for (Paquete p : centro.obtenerPaquetesPorDestino("Armenia")) {
+            System.out.println("  " + p); // PQ731 y PQ420
+        }
+        System.out.println("Paquetes de Pereira: " + centro.obtenerPaquetesPorDestino("Pereira").tamanio()); // 0
+
+        System.out.println("\nAgrupados por municipio:");
+        for (String municipio : centro.agruparPaquetesPorDestino().keySet()) {
+            System.out.println("  " + municipio + " -> " + centro.obtenerPaquetesPorDestino(municipio).tamanio() + " paquete(s)");
+        }
     }
 }
