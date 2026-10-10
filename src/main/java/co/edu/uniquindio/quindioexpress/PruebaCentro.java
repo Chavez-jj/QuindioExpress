@@ -94,6 +94,21 @@ public class PruebaCentro {
         System.out.println("Historial de entregas (en orden): " + codigosLista(centro2.obtenerHistorial())); // PQ105 PQ731
         System.out.println("Pendientes: " + centro2.cantidadPendientes()); // 1 (PQ420)
 
+        // --- Paso 6: análisis (los implementa el Integrante 3 en AnalisisPaquetes) ---
+        System.out.println();
+        probarAnalisis("Peso total Armenia", () -> centro.pesoTotalMunicipio("Armenia"));          // 14.0
+        probarAnalisis("Prioridad >= 4", () -> centro.contarPrioridadMinima(4));                   // 3
+        probarAnalisis("Búsqueda binaria PQ420", () -> centro.buscarBinario("PQ420"));             // PQ420
+        probarAnalisis("Paquete más pesado", () -> centro.paqueteMasPesado());                     // PQ420
+    }
+
+    // Muestra el resultado, o "pendiente" si AnalisisPaquetes aún no tiene ese método hecho
+    private static void probarAnalisis(String descripcion, java.util.function.Supplier<Object> operacion) {
+        try {
+            System.out.println(descripcion + ": " + operacion.get());
+        } catch (UnsupportedOperationException e) {
+            System.out.println(descripcion + ": pendiente (Integrante 3)");
+        }
     }
 
     // Ejecuta una operación y muestra si se aceptó o por qué se rechazó

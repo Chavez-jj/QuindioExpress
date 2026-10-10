@@ -1,5 +1,6 @@
 package co.edu.uniquindio.quindioexpress.servicio;
 
+import co.edu.uniquindio.quindioexpress.algoritmos.AnalisisPaquetes;
 import co.edu.uniquindio.quindioexpress.comparadores.ComparadorDespacho;
 import co.edu.uniquindio.quindioexpress.modelo.Paquete;
 import co.edu.uniquindio.quindioexpress.modelo.Repartidor;
@@ -264,6 +265,30 @@ public class CentroDistribucion {
         List<Paquete> copia = new ArrayList<>(paquetesEnOrden);
         Collections.sort(copia);
         return copia;
+    }
+
+    // =========================================================================
+    // ANÁLISIS: estos métodos solo pasan los datos del centro a AnalisisPaquetes
+    // (la lógica recursiva, binaria y de divide y vencerás está en esa clase).
+    // =========================================================================
+
+    public double pesoTotalMunicipio(String municipio) {
+        return AnalisisPaquetes.pesoTotalMunicipio(paquetesEnOrden, municipio);
+    }
+
+    public int contarPrioridadMinima(int prioridadMinima) {
+        return AnalisisPaquetes.contarPrioridadMinima(paquetesEnOrden, prioridadMinima);
+    }
+
+    /**
+     * La búsqueda binaria necesita la lista ordenada por código, por eso se usa ordenarPorCodigo().
+     */
+    public Paquete buscarBinario(String codigo) {
+        return AnalisisPaquetes.buscarBinario(ordenarPorCodigo(), codigo);
+    }
+
+    public Paquete paqueteMasPesado() {
+        return AnalisisPaquetes.paqueteMasPesado(paquetesEnOrden);
     }
 
     public int cantidadPaquetes() {
