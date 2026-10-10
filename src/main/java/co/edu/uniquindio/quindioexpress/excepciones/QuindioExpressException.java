@@ -1,6 +1,6 @@
-package co.edu.uniquindio.poo.quindioexpress.excepciones;
+package co.edu.uniquindio.quindioexpress.excepciones;
 
-public class QuindioExpressException extends Exception {
+public class QuindioExpressException extends RuntimeException {
 
     public QuindioExpressException(String mensaje) {
         super(mensaje);
