@@ -10,9 +10,9 @@ public class Main {
         ListaEnlazadaSimple<Paquete> lista = new ListaEnlazadaSimple<>();
 
         // 1. Crear paquetes de prueba
-        Paquete p1 = new Paquete("PQ001", "Armenia - Centro", 2.5, 3, 1.5);
-        Paquete p2 = new Paquete("PQ002", "Armenia - Norte", 5.0, 5, 2.0);
-        Paquete p3 = new Paquete("PQ003", "Calarcá", 1.2, 1, 0.8);
+        Paquete p1 = new Paquete("PQ001", "Armenia - Centro", 2.5, 3, 90);
+        Paquete p2 = new Paquete("PQ002", "Armenia - Norte", 5.0, 5, 120);
+        Paquete p3 = new Paquete("PQ003", "Calarcá", 1.2, 1, 48);
 
         // 2. Agregar elementos
         lista.agregar(p1);
