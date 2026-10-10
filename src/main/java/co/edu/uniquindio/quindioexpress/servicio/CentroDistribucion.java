@@ -145,6 +145,27 @@ public class CentroDistribucion {
         return new TreeSet<>(municipiosOrdenados);
     }
 
+    /**
+     * Retorna una copia de todos los paquetes registrados, ordenada con el comparador que se pase
+     * (ComparadorPeso, ComparadorTiempo, ComparadorPrioridad, ComparadorDestino...).
+     * Se ordena una copia para no dañar el orden de llegada original.
+     */
+    public List<Paquete> ordenarPor(Comparator<Paquete> comparador) {
+        List<Paquete> copia = new ArrayList<>(paquetesEnOrden);
+        copia.sort(comparador);
+        return copia;
+    }
+
+    /**
+     * Retorna una copia de los paquetes en su orden natural (Comparable: código ascendente).
+     * Esta lista sirve para la búsqueda binaria por código.
+     */
+    public List<Paquete> ordenarPorCodigo() {
+        List<Paquete> copia = new ArrayList<>(paquetesEnOrden);
+        Collections.sort(copia);
+        return copia;
+    }
+
     public int cantidadPaquetes() {
         return paquetesEnOrden.size();
     }

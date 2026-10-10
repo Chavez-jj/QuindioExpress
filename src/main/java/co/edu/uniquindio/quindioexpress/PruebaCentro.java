@@ -1,5 +1,6 @@
 package co.edu.uniquindio.quindioexpress;
 
+import co.edu.uniquindio.quindioexpress.comparadores.*;
 import co.edu.uniquindio.quindioexpress.modelo.Paquete;
 import co.edu.uniquindio.quindioexpress.servicio.CentroDistribucion;
 
@@ -54,5 +55,22 @@ public class PruebaCentro {
         // Esperado: PQ105, PQ942, PQ420, PQ318 (PQ731 ya se atendió)
         System.out.println("Pendientes: " + centro.cantidadPendientes()); // 0
         System.out.println("Siguiente por llegada: " + centro.procesarSiguientePaquete()); // null
+
+        // --- Paso 4: ordenar con los comparadores ---
+        // El registro en orden de llegada se conserva aunque ya se hayan atendido
+        System.out.println("\nPor código (Comparable):   " + codigos(centro.ordenarPorCodigo()));
+        System.out.println("Por prioridad (mayor a menor): " + codigos(centro.ordenarPor(new ComparadorPrioridad())));
+        System.out.println("Por peso (mayor a menor):  " + codigos(centro.ordenarPor(new ComparadorPeso())));
+        System.out.println("Por tiempo (menor a mayor): " + codigos(centro.ordenarPor(new ComparadorTiempo())));
+        System.out.println("Por destino (alfabético):  " + codigos(centro.ordenarPor(new ComparadorDestino())));
+    }
+
+    // Convierte una lista de paquetes en el texto de sus códigos, para imprimir corto
+    private static String codigos(java.util.List<Paquete> paquetes) {
+        String texto = "";
+        for (Paquete p : paquetes) {
+            texto += p.getCodigo() + " ";
+        }
+        return texto;
     }
 }
