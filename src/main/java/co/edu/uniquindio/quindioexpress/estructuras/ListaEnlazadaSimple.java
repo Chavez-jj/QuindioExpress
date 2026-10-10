@@ -103,13 +103,31 @@ public class ListaEnlazadaSimple<T> implements Coleccion<T> {
         return tamanio == 0;
     }
 
+    // =========================================================================
+    // --- MÉTODOS DE COMPATIBILIDAD (DELEGACIÓN) ---
+    // Permiten compatibilidad si alguna clase llama a la interfaz genérica
+    // =========================================================================
+
+    /**
+     * Delegación a tamanio() para mantener compatibilidad con interfaces genéricas / JCF.
+     */
+    public int getSize() {
+        return tamanio();
+    }
+
+    /**
+     * Delegación a estaVacia() para mantener compatibilidad con interfaces genéricas / JCF.
+     */
+    public boolean isEmpty() {
+        return estaVacia();
+    }
+
     // --- SOPORTE PARA ITERABLE E ITERATOR ---
 
     @Override
     public Iterator<T> iterator() {
         return new IteradorLista();
     }
-
     /**
      * Clase interna privada que implementa Iterator<T> para permitir el recorrido con for-each.
      */
