@@ -5,6 +5,7 @@ import co.edu.uniquindio.quindioexpress.comparadores.ComparadorDespacho;
 import co.edu.uniquindio.quindioexpress.modelo.Paquete;
 import co.edu.uniquindio.quindioexpress.modelo.Repartidor;
 import co.edu.uniquindio.quindioexpress.estructuras.ListaEnlazadaSimple;
+import co.edu.uniquindio.quindioexpress.excepciones.QuindioExpressException;
 
 import java.util.*;
 
@@ -153,23 +154,23 @@ public class CentroDistribucion {
     public void asignarPaquete(String codigo, String identificacion) {
         Paquete paquete = paquetesPorCodigo.get(codigo);
         if (paquete == null) {
-            throw new IllegalArgumentException("No existe el paquete " + codigo);
+            throw new QuindioExpressException("No existe el paquete " + codigo);
         }
         if (historialEntregas.contieneRecursivo(paquete)) {
-            throw new IllegalArgumentException("El paquete " + codigo + " ya fue entregado.");
+            throw new QuindioExpressException("El paquete " + codigo + " ya fue entregado.");
         }
         if (asignaciones.containsKey(codigo)) {
-            throw new IllegalArgumentException("El paquete " + codigo + " ya está asignado.");
+            throw new QuindioExpressException("El paquete " + codigo + " ya está asignado.");
         }
         Repartidor repartidor = repartidores.get(identificacion);
         if (repartidor == null) {
-            throw new IllegalArgumentException("No existe el repartidor " + identificacion);
+            throw new QuindioExpressException("No existe el repartidor " + identificacion);
         }
         if (!repartidor.isDisponible()) {
-            throw new IllegalArgumentException("El repartidor " + repartidor.getNombre() + " no está disponible.");
+            throw new QuindioExpressException("El repartidor " + repartidor.getNombre() + " no está disponible.");
         }
         if (!repartidor.getZona().equalsIgnoreCase(paquete.getDestino())) {
-            throw new IllegalArgumentException("La zona de " + repartidor.getNombre() + " (" + repartidor.getZona()
+            throw new QuindioExpressException("La zona de " + repartidor.getNombre() + " (" + repartidor.getZona()
                     + ") no coincide con el destino del paquete (" + paquete.getDestino() + ").");
         }
         asignaciones.put(codigo, repartidor);
