@@ -5,6 +5,7 @@ import co.edu.uniquindio.quindioexpress.comparadores.ComparadorDespacho;
 import co.edu.uniquindio.quindioexpress.modelo.Paquete;
 import co.edu.uniquindio.quindioexpress.modelo.Repartidor;
 import co.edu.uniquindio.quindioexpress.estructuras.ListaEnlazadaSimple;
+import co.edu.uniquindio.quindioexpress.excepciones.QuindioExpressException;
 
 import java.util.*;
 
@@ -56,10 +57,10 @@ public class CentroDistribucion {
      */
     public void recibirPaquete(Paquete paquete) {
         if (paquete == null) {
-            throw new IllegalArgumentException("El paquete no puede ser nulo.");
+            throw new QuindioExpressException("El paquete no puede ser nulo.");
         }
         if (paquetesPorCodigo.containsKey(paquete.getCodigo())) {
-            throw new IllegalArgumentException("Ya existe un paquete con el código " + paquete.getCodigo());
+            throw new QuindioExpressException("Ya existe un paquete con el código " + paquete.getCodigo());
         }
 
         paquetesPorCodigo.put(paquete.getCodigo(), paquete);
@@ -122,10 +123,10 @@ public class CentroDistribucion {
      */
     public void registrarRepartidor(Repartidor repartidor) {
         if (repartidor == null) {
-            throw new IllegalArgumentException("El repartidor no puede ser nulo.");
+            throw new QuindioExpressException("El repartidor no puede ser nulo.");
         }
         if (repartidores.containsKey(repartidor.getIdentificacion())) {
-            throw new IllegalArgumentException("Ya existe un repartidor con la identificación " + repartidor.getIdentificacion());
+            throw new QuindioExpressException("Ya existe un repartidor con la identificación " + repartidor.getIdentificacion());
         }
         repartidores.put(repartidor.getIdentificacion(), repartidor);
     }
@@ -153,23 +154,23 @@ public class CentroDistribucion {
     public void asignarPaquete(String codigo, String identificacion) {
         Paquete paquete = paquetesPorCodigo.get(codigo);
         if (paquete == null) {
-            throw new IllegalArgumentException("No existe el paquete " + codigo);
+            throw new QuindioExpressException("No existe el paquete " + codigo);
         }
         if (historialEntregas.contieneRecursivo(paquete)) {
-            throw new IllegalArgumentException("El paquete " + codigo + " ya fue entregado.");
+            throw new QuindioExpressException("El paquete " + codigo + " ya fue entregado.");
         }
         if (asignaciones.containsKey(codigo)) {
-            throw new IllegalArgumentException("El paquete " + codigo + " ya está asignado.");
+            throw new QuindioExpressException("El paquete " + codigo + " ya está asignado.");
         }
         Repartidor repartidor = repartidores.get(identificacion);
         if (repartidor == null) {
-            throw new IllegalArgumentException("No existe el repartidor " + identificacion);
+            throw new QuindioExpressException("No existe el repartidor " + identificacion);
         }
         if (!repartidor.isDisponible()) {
-            throw new IllegalArgumentException("El repartidor " + repartidor.getNombre() + " no está disponible.");
+            throw new QuindioExpressException("El repartidor " + repartidor.getNombre() + " no está disponible.");
         }
         if (!repartidor.getZona().equalsIgnoreCase(paquete.getDestino())) {
-            throw new IllegalArgumentException("La zona de " + repartidor.getNombre() + " (" + repartidor.getZona()
+            throw new QuindioExpressException("La zona de " + repartidor.getNombre() + " (" + repartidor.getZona()
                     + ") no coincide con el destino del paquete (" + paquete.getDestino() + ").");
         }
         asignaciones.put(codigo, repartidor);
@@ -190,10 +191,10 @@ public class CentroDistribucion {
     public void registrarEntrega(String codigo) {
         Paquete paquete = paquetesPorCodigo.get(codigo);
         if (paquete == null) {
-            throw new IllegalArgumentException("No existe el paquete " + codigo);
+            throw new QuindioExpressException("No existe el paquete " + codigo);
         }
         if (historialEntregas.contieneRecursivo(paquete)) {
-            throw new IllegalArgumentException("El paquete " + codigo + " ya fue entregado.");
+            throw new QuindioExpressException("El paquete " + codigo + " ya fue entregado.");
         }
         colaLlegada.remove(paquete);
         colaPrioridad.remove(paquete);
