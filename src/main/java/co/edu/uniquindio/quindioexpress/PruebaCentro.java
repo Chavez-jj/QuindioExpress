@@ -1,6 +1,7 @@
 package co.edu.uniquindio.quindioexpress;
 
 import co.edu.uniquindio.quindioexpress.comparadores.*;
+import co.edu.uniquindio.quindioexpress.excepciones.QuindioExpressException;
 import co.edu.uniquindio.quindioexpress.modelo.Paquete;
 import co.edu.uniquindio.quindioexpress.modelo.Repartidor;
 import co.edu.uniquindio.quindioexpress.servicio.CentroDistribucion;
@@ -17,7 +18,7 @@ public class PruebaCentro {
 
         try {
             centro.recibirPaquete(new Paquete("PQ731", "Salento", 1.0, 2, 15));
-        } catch (IllegalArgumentException e) {
+        } catch (QuindioExpressException e) {
             System.out.println("Rechazado: " + e.getMessage());
         }
 
@@ -116,7 +117,7 @@ public class PruebaCentro {
         try {
             operacion.run();
             System.out.println(descripcion + ": OK");
-        } catch (IllegalArgumentException e) {
+        } catch (QuindioExpressException e) {
             System.out.println(descripcion + ": rechazado -> " + e.getMessage());
         }
     }

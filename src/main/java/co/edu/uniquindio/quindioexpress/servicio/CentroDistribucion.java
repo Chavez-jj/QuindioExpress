@@ -57,10 +57,10 @@ public class CentroDistribucion {
      */
     public void recibirPaquete(Paquete paquete) {
         if (paquete == null) {
-            throw new IllegalArgumentException("El paquete no puede ser nulo.");
+            throw new QuindioExpressException("El paquete no puede ser nulo.");
         }
         if (paquetesPorCodigo.containsKey(paquete.getCodigo())) {
-            throw new IllegalArgumentException("Ya existe un paquete con el código " + paquete.getCodigo());
+            throw new QuindioExpressException("Ya existe un paquete con el código " + paquete.getCodigo());
         }
 
         paquetesPorCodigo.put(paquete.getCodigo(), paquete);
@@ -123,10 +123,10 @@ public class CentroDistribucion {
      */
     public void registrarRepartidor(Repartidor repartidor) {
         if (repartidor == null) {
-            throw new IllegalArgumentException("El repartidor no puede ser nulo.");
+            throw new QuindioExpressException("El repartidor no puede ser nulo.");
         }
         if (repartidores.containsKey(repartidor.getIdentificacion())) {
-            throw new IllegalArgumentException("Ya existe un repartidor con la identificación " + repartidor.getIdentificacion());
+            throw new QuindioExpressException("Ya existe un repartidor con la identificación " + repartidor.getIdentificacion());
         }
         repartidores.put(repartidor.getIdentificacion(), repartidor);
     }
@@ -191,10 +191,10 @@ public class CentroDistribucion {
     public void registrarEntrega(String codigo) {
         Paquete paquete = paquetesPorCodigo.get(codigo);
         if (paquete == null) {
-            throw new IllegalArgumentException("No existe el paquete " + codigo);
+            throw new QuindioExpressException("No existe el paquete " + codigo);
         }
         if (historialEntregas.contieneRecursivo(paquete)) {
-            throw new IllegalArgumentException("El paquete " + codigo + " ya fue entregado.");
+            throw new QuindioExpressException("El paquete " + codigo + " ya fue entregado.");
         }
         colaLlegada.remove(paquete);
         colaPrioridad.remove(paquete);

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.quindioexpress;
 
+import co.edu.uniquindio.quindioexpress.excepciones.QuindioExpressException;
 import co.edu.uniquindio.quindioexpress.estructuras.ListaEnlazadaSimple;
 import co.edu.uniquindio.quindioexpress.modelo.Paquete;
 import co.edu.uniquindio.quindioexpress.modelo.Repartidor;
@@ -33,7 +34,7 @@ public class CentroDistribucionEntregasTest {
         try {
             centro.registrarEntrega("PQ105");
             System.out.println("3. Error: Permitión entrega duplicada.");
-        } catch (IllegalArgumentException e) {
+        } catch (QuindioExpressException e) {
             System.out.println("3. Rechazo de entrega duplicada -> Excepción capturada: " + e.getMessage());
         }
 
