@@ -15,7 +15,7 @@ Requisitos: JDK 17 o superior y Maven.
   java -cp target/classes co.edu.uniquindio.quindioexpress.Main
   ```
 
-La clase `PruebaCentro` prueba por separado las operaciones de `CentroDistribucion`.
+Las clases `PruebaCentro`, `ListaEnlazadaSimpleTest` y `CentroDistribucionEntregasTest` también tienen `main` y prueban por separado la lista y el centro.
 
 ## Estructura del proyecto
 
@@ -23,11 +23,14 @@ La clase `PruebaCentro` prueba por separado las operaciones de `CentroDistribuci
 src/main/java/co/edu/uniquindio/quindioexpress/
 ├── Main.java                    Carga los datos de prueba y demuestra cada operación
 ├── PruebaCentro.java            Prueba de CentroDistribucion
+├── ListaEnlazadaSimpleTest.java Casos borde de la lista enlazada propia
+├── CentroDistribucionEntregasTest.java  Flujo de asignación, entrega e historial
 ├── modelo/                      Paquete (Comparable por código) y Repartidor
 ├── estructuras/                 Coleccion<T>, Nodo<T> y ListaEnlazadaSimple<T> (propia, Iterable)
 ├── comparadores/                Criterios de orden reutilizables para Paquete
 ├── servicio/                    CentroDistribucion: lógica principal del sistema
-└── algoritmos/                  AnalisisPaquetes: recursivos, búsqueda binaria y divide y vencerás
+├── algoritmos/                  AnalisisPaquetes: recursivos, búsqueda binaria y divide y vencerás
+└── excepciones/                 QuindioExpressException: errores propios del sistema
 ```
 
 ## Estructuras usadas en CentroDistribucion

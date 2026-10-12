@@ -3,7 +3,7 @@
 ## 1. Modelo Paquete
 - `codigo`: String inmutable, usado en `equals` y `hashCode`.
 - `peso`: double, mayor a 0, no admite NaN ni infinitos.
-- `prioridad`: int (rango 1 a 5, por defecto 3).
+- `prioridad`: int (rango 1 a 5, por defecto 5).
 - `tiempoEstimado`: int en **minutos**.
 
 ## 2. Estructura ListaEnlazadaSimple<T>
