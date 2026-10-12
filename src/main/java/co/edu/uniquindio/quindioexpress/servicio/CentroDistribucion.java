@@ -221,10 +221,14 @@ public class CentroDistribucion {
         return copia;
     }
 
+    /**
+     * Retorna una copia del mapa municipio -> paquetes de ese municipio.
+     * Se llena en recibirPaquete; se entrega una copia para que desde afuera
+     * no se puedan agregar o quitar municipios del original.
+     */
     public Map<String, ListaEnlazadaSimple<Paquete>> agruparPaquetesPorDestino() {
-        return paquetesPorMunicipio;
+        return new HashMap<>(paquetesPorMunicipio);
     }
-
     /**
      * Retorna los paquetes de un municipio, o una lista vacía si no hay ninguno.
      */
