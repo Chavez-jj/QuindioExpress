@@ -81,7 +81,7 @@ public class AnalisisPaquetes {
                 return null;
             }
 
-            int comparacion = paqueteMedio.getCodigo().compareToIgnoreCase(codigo);
+            int comparacion = paqueteMedio.getCodigo().compareTo(codigo);
 
             if (comparacion == 0) {
                 return paqueteMedio; // Encontrado
