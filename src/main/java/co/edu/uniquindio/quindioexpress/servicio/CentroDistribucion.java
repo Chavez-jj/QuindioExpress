@@ -214,30 +214,42 @@ public class CentroDistribucion {
      * Aplica una copia defensiva para proteger el encapsulamiento de la estructura interna.
      */
     public ListaEnlazadaSimple<Paquete> obtenerHistorial() {
+        return copiarLista(historialEntregas);
+    }
+
+    /**
+     * Copia una lista enlazada elemento por elemento (los Paquetes se comparten,
+     * pero la estructura de nodos es nueva). Evita repetir código en las copias defensivas.
+     */
+    private ListaEnlazadaSimple<Paquete> copiarLista(ListaEnlazadaSimple<Paquete> original) {
         ListaEnlazadaSimple<Paquete> copia = new ListaEnlazadaSimple<>();
-        for (Paquete p : historialEntregas) {
+        for (Paquete p : original) {
             copia.agregar(p);
         }
         return copia;
     }
 
     /**
-     * Retorna una copia del mapa municipio -> paquetes de ese municipio.
-     * Se llena en recibirPaquete; se entrega una copia para que desde afuera
-     * no se puedan agregar o quitar municipios del original.
+     * Retorna los paquetes agrupados por municipio.
+     * Copia defensiva PROFUNDA: se copia el mapa y también cada lista interna,
+     * así quien llame no puede alterar el estado del centro.
      */
     public Map<String, ListaEnlazadaSimple<Paquete>> agruparPaquetesPorDestino() {
-        return new HashMap<>(paquetesPorMunicipio);
+        Map<String, ListaEnlazadaSimple<Paquete>> copia = new HashMap<>();
+        for (Map.Entry<String, ListaEnlazadaSimple<Paquete>> entrada : paquetesPorMunicipio.entrySet()) {
+            copia.put(entrada.getKey(), copiarLista(entrada.getValue()));
+        }
+        return copia;
     }
     /**
-     * Retorna los paquetes de un municipio, o una lista vacía si no hay ninguno.
+     * Retorna una COPIA de los paquetes de un municipio, o una lista vacía si no hay ninguno.
      */
     public ListaEnlazadaSimple<Paquete> obtenerPaquetesPorDestino(String municipio) {
         ListaEnlazadaSimple<Paquete> lista = paquetesPorMunicipio.get(municipio);
         if (lista == null) {
             return new ListaEnlazadaSimple<>();
         }
-        return lista;
+        return copiarLista(lista);
     }
 
     /**
